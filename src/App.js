@@ -42,7 +42,18 @@ function App() {
       const data= await response.json();  
       const loadedMovies=[]
 
+      for(const key in data){
+        loadedMovies.push({
+          id:key,
+          title:data[key].title,
+          openingText:data[key].openingText,
+          releaseData:data[key].releaseData,
+        })
+      }
+     
       
+      setMovies(loadedMovies)   
+     
     }
     catch(error){
       setError(error.message)
@@ -65,6 +76,23 @@ function App() {
     const data=await response.json()
     console.log(data)
   }
+  const deleteMovieHandler = async (id) => {
+    console.log("id>>>",id)
+    const deleteUrl = `https://react-http-6e598-default-rtdb.firebaseio.com/movies/${id}.json`;
+
+    try {
+     
+      const response = await fetch(deleteUrl, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error('Could not delete movie.');
+      }
+
+      
+      setMovies(prevMovies => prevMovies.filter(movie => movie.id !== id));
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -75,7 +103,7 @@ function App() {
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
       <section>
-       {!isLoading && movies.length>0 && <MoviesList movies={movies} />}
+       {!isLoading && movies.length>0 && <MoviesList movies={movies} onDelete={deleteMovieHandler} />}
        {!isLoading && movies.length===0 && !error && <p>Found no movies</p>}
        {!isLoading && error && <p>{error}</p>}
        {isLoading && <img src={load} alt='loading'/>}
