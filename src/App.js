@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import MoviesList from './components/MoviesList';
 import './App.css';
+import load from './components/load.gif'
 
 function App() {
   const [movies,setMovies]=useState([]);
@@ -50,7 +51,7 @@ function App() {
       <section>
        {!isLoading && movies.length>0 && <MoviesList movies={movies} />}
        {!isLoading && movies.length===0 && <p>Found no movies</p>}
-       {isLoading && <p>Loading...</p>}
+       {isLoading && <img src={load} alt='loading'/>}
       </section>
     </React.Fragment>
   );
